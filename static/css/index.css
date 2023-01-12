@@ -1,0 +1,23 @@
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #f7eeee;
+}
+body .container {
+  display: flex;
+  margin-top: 50px;
+}
+body .container .left {
+  flex: 1;
+  float: left;
+  height: 450px;
+  border: 1px solid #ccc;
+  margin: 0 auto;
+}
+body .container .right {
+  flex: 1;
+  float: left;
+  height: 450px;
+  margin: 0 auto;
+  border: 1px solid #ccc;
+}

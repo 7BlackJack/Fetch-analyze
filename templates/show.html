@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+  <script src="../static/js/echarts.js"></script>
+  <link rel="stylesheet" href="../static/css/index.css">
+
+
+</head>
+
+<body>
+  <div class="container">
+    <div id="main1" class="left"></div>
+    <div id="main2" class="right"></div>
+
+  </div>
+
+
+
+
+
+  <script>
+    var myChart1 = echarts.init(document.getElementById('main1'))
+    var myChart = echarts.init(document.getElementById('main2'))
+
+
+    var option1 = {
+      legend: {
+        top: 'bottom'
+      },
+      toolbox: {
+        show: true,
+        feature: {
+          mark: { show: true },
+          dataView: { show: true, readOnly: false },
+          restore: { show: true },
+          saveAsImage: { show: true }
+        }
+      },
+      series: [
+        {
+          name: 'Variety distribution data',
+          type: 'pie',
+          radius: [50, 150],
+          center: ['50%', '50%'],
+          roseType: 'area',
+          itemStyle: {
+            borderRadius: 8
+          },
+          data: {{ type_data | tojson }}
+        }
+      ]
+    };
+
+    option1 && myChart1.setOption(option1);
+
+
+
+    // prettier-ignore
+    let dataAxis = {{ dataAxis| tojson}};
+    // prettier-ignore
+    let data = {{ data| tojson}};
+    let yMax = 500;
+    let dataShadow = [];
+    for (let i = 0; i < data.length; i++) {
+      dataShadow.push(yMax);
+    }
+    option = {
+      title: {
+        text: '菜品省份区域分布数据',
+        subtext: 'Regional distribution data of dish provinces'
+      },
+      xAxis: {
+        data: dataAxis,
+        axisLabel: {
+          inside: true,
+          color: '#fff'
+        },
+        axisTick: {
+          show: false
+        },
+        axisLine: {
+          show: false
+        },
+        z: 10
+      },
+      yAxis: {
+        axisLine: {
+          show: false
+        },
+        axisTick: {
+          show: false
+        },
+        axisLabel: {
+          color: '#999'
+        }
+      },
+      dataZoom: [
+        {
+          type: 'inside'
+        }
+      ],
+      series: [
+        {
+          type: 'bar',
+          showBackground: true,
+          itemStyle: {
+            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+              { offset: 0, color: '#83bff6' },
+              { offset: 0.5, color: '#188df0' },
+              { offset: 1, color: '#188df0' }
+            ])
+          },
+          emphasis: {
+            itemStyle: {
+              color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                { offset: 0, color: '#2378f7' },
+                { offset: 0.7, color: '#2378f7' },
+                { offset: 1, color: '#83bff6' }
+              ])
+            }
+          },
+          data: data
+        }
+      ]
+    };
+    // Enable data zoom when user click bar.
+    const zoomSize = 6;
+    myChart.on('click', function (params) {
+      console.log(dataAxis[Math.max(params.dataIndex - zoomSize / 2, 0)]);
+      myChart.dispatchAction({
+        type: 'dataZoom',
+        startValue: dataAxis[Math.max(params.dataIndex - zoomSize / 2, 0)],
+        endValue:
+          dataAxis[Math.min(params.dataIndex + zoomSize / 2, data.length - 1)]
+      });
+    });
+
+    option && myChart.setOption(option);
+
+
+
+  </script>
+</body>
+
+</html>
